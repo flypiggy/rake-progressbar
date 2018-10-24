@@ -26,9 +26,9 @@ class RakeProgressbar
   def inc
     self.actual += 1
     self.percent = (self.actual.to_f/self.maximal.to_f*100.0)
-    
+
     display
-    
+
     if self.actual == self.maximal && !self.finish
       finished
     end
@@ -41,7 +41,7 @@ class RakeProgressbar
     else
       remaining = (time_dif.to_f/self.percent.to_f * 100.0).to_i - time_dif
     end
-    
+
     if self.last_percent != (self.percent*10).to_i && self.last_time_dif != time_dif
       percent_out = ((self.percent*10).to_i.to_f/10.0).to_s
       if percent < 10
@@ -52,8 +52,8 @@ class RakeProgressbar
       STDOUT.print("\r#{percent_out}% ")
       STDOUT.print( "["+("#" * (self.percent*((self.cols-31).to_f/100)).to_i))
       STDOUT.print( ("_")* ((100-self.percent)*((self.cols-31).to_f/100)).to_i)
-      STDOUT.print( "] "+(Time.at(remaining  - 60*60).strftime('%H:%M:%S')) )
-      STDOUT.print( (" -> ")+(Time.at(time_dif - 60*60).strftime('%H:%M:%S'))+" " )
+      STDOUT.print( "] "+(Time.at(time_dif).utc.strftime('%H:%M:%S')) )
+      STDOUT.print( (" -> ")+(Time.at(remaining).utc.strftime('%H:%M:%S'))+" " )
       STDOUT.flush
       self.last_percent = (self.percent*10).to_i
       self.last_time_dif = time_dif
@@ -78,8 +78,8 @@ class RakeProgressbar
       self.finish = true
     end
   end
-  
-  
+
+
   # Determines if a shell command exists by searching for it in ENV['PATH'].
   def command_exists?(command)
     ENV['PATH'].split(File::PATH_SEPARATOR).any? {|d| File.exists? File.join(d, command) }
